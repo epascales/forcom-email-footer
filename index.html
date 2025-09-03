@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Generator stopki e-mail</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    h2 {
+      margin: 1rem 0;
+      color: #1a7f5a;
+      text-align: center;
+    }
+
+    .logo {
+      display: block;
+      margin: 0 auto 1rem auto;
+      max-width: 200px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 600px;
+      margin: 0 auto 20px auto;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      font-size: 0.85rem;
+      color: #555;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border 0.2s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #1a7f5a;
+      box-shadow: 0 0 0 2px rgba(26, 127, 90, 0.2);
+    }
+
+    button {
+      background: #1a7f5a;
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #146644;
+    }
+
+    #preview {
+      margin-top: 20px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      background: #fff;
+      overflow-x: auto;
+    }
+
+    #toast {
+      visibility: hidden;
+      min-width: 220px;
+      background-color: #1a7f5a;
+      color: #fff;
+      text-align: center;
+      border-radius: 8px;
+      padding: 12px;
+      position: fixed;
+      z-index: 1;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      font-size: 1rem;
+      opacity: 0;
+      transition: opacity 0.5s, bottom 0.5s;
+    }
+
+    #toast.show {
+      visibility: visible;
+      opacity: 1;
+      bottom: 50px;
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 15px;
+      }
+      input, button {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Logo nagłówka -->
+  <img src="https://cdn.prod.website-files.com/67339927e0b13b80c20c4174/6733a3528be02c5fcee3eb42_forcom-logo.svg" alt="Forcom Logo" class="logo">
+
+  <h2>Generator stopki e-mail</h2>
+
+  <div class="card">
+    <div class="form-group">
+      <label>Imię i nazwisko</label>
+      <input type="text" id="name" value="Mariusz Jaśkowiak">
+    </div>
+    <div class="form-group">
+      <label>Stanowisko</label>
+      <input type="text" id="position" list="positions" value="Team Leader">
+      <datalist id="positions">
+        <option value="Młodszy Administrator Systemów IT">
+        <option value="Project Manager">
+        <option value="Team Leader">
+        <option value="Solution Architect">
+      </datalist>
+    </div>
+    <div class="form-group">
+      <label>Dział</label>
+      <input type="text" id="department" list="departments" value="Software Development Department">
+      <datalist id="departments">
+        <option value="Software Development Department">
+        <option value="IT Service">
+        <option value="DevOps">
+      </datalist>
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="email" value="">
+    </div>
+    <div class="form-group">
+      <label>Telefon</label>
+      <input type="text" id="phone" value="" placeholder="Poprawny format: +48 ### ### ###">
+    </div>
+    <div class="form-group">
+      <label>Strona WWW</label>
+      <input type="text" id="website" value="https://www.forcom.eu">
+    </div>
+    <button id="copyBtn">📋 Kopiuj do schowka</button>
+  </div>
+
+  <h3 style="text-align:center;">Podgląd stopki</h3>
+  <div id="preview"></div>
+
+  <div id="toast">✅ Skopiowano stopkę!</div>
+
+  <script>
+    const inputs = document.querySelectorAll("input");
+    const preview = document.getElementById("preview");
+    const toast = document.getElementById("toast");
+
+    function generateSignature() {
+      const name = document.getElementById("name").value.trim();
+      const position = document.getElementById("position").value.trim();
+      const department = document.getElementById("department").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const website = document.getElementById("website").value.trim();
+
+      let contactInfo = "";
+
+      if (position) contactInfo += `<span style="color: #444;">${position}</span><br/>`;
+      if (department) contactInfo += `<span style="color: #444;">${department}</span><br/>`;
+      if (email) contactInfo += `<a href="mailto:${email}" style="color: #1a7f5a; text-decoration: none;">${email}</a><br/>`;
+      if (phone) contactInfo += `<a href="tel:${phone.replace(/ /g,'')}" style="color: #1a7f5a; text-decoration: none;">${phone}</a><br/>`;
+      if (website) contactInfo += `<a href="${website}" target="_blank" style="color: #1a7f5a; text-decoration: none;">${website}</a>`;
+
+      return `
+      <span style="font-size:12px">Pozdrawiam / Best Regards</span>
+<br>
+<br>
+      <table style="font-family: Arial, sans-serif; font-size: 12px; color: #000; background-color: #ffffff;">
+        <tr>
+          <td style="padding-right: 15px;">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAFVUlEQVR4nO2ay28bVRTGv3PvnbFdpylu2kRxqRclDRB3RXcFEZBoqbq3JVSlapMgSKVs+AdsLxGopE1kEOpfYEusEJuuskbdViqiO6Rm0VdoGj/m3ntYjBMV1IVjzyvCP8tjaWTPfPfzOefOfRCCgEEgcKG+ktO684iUzEFb/2zCEXELiJuRAXELiJuRAXELiJuRAXELiJuRAXELiJuRAXELiJuRAXELiJuRAXELiJv/vQEKHMikBYEBe7dL0GAwGOgdE47ypQ8NA0D27nHvJZ44UIKAwzAfBKhCfSU37EWs0yXhudz2/j4G0FM2RsNYBpJvgdK682joq2iwVR7Bs9uO43zKLLZtxjclAI2hokjJoSMADEAKsDYq7Yw/fbj83cvhpUWDgrZB1QACyHvFz5xeYaXe+XioVgjFB4STc3T+j8cEAPdzzy1KTft63VOBlCq/+QTAD3vq9QDBFNgD6GBCs+x37bWa2Tt9/z9fm2tU3K3Hf6bHnHGpotQXEoRGyW80kQHgN5yZTv/81RmjMUdsigDNglFg5sntrb/GM5TKaNNRh9cABqE6L1Hb1Cg3DQBM1b+eVFZ/TIIucX35gmU6K1LKJakABthakGXAMsB+cB4+A/YaTpsa2NSolNz8dO5zsnwVrD8TKWcCggDPgLUBtzzDxAxQbwWLaf86oENmQKMkQU0DbOr8+sIEZOY6gZeEFO9DEWzHg211DYgZgACIQJD7jyO0f9j/OBwGVCp+jpdr5vjtq+MZJ3sT4FWRUnn2NGyrawHyG/16g/sg+QY0ShJlv6Kf2vhyARJVkVJnuO3B7rY1AAGigQd1STbAr+7lpjm1dv0suc4aueoKewZ2p60BSBANrT+Zw2E/5BnlpslvLC7CdX8nV12xu13DWlsQKRAFMs5IXgT0Qn5m9XKq9d7bGyLtLnO7C7urDYgOlN/9kCwDGiWJctOcuHV1upXONkTa+ci+amswS7/xwZMcAyrzCuWmzv+w+C6l5a/CkTN2p+WByEEw0f5GkmGA/8/rqVvXipRS90jStN3taBA5Yd86fgN6YZ//fmGW0ul7JGmaW56BGL7C90O8vUClIlBumsm1pSk6kvmNlJjmtmcgwsn3NxGfAQxC8QHNNUquo/CLcOU73O7qKBsPxGlAtSJRbpoXj4/WRTZ9we52vCAebA5KPDXA7+t1/s7idZlNL9mdViQF701EHwF+3ttC/cYZUnLddroWjP7DnoN9RR8BxQcEwBpNP4kjaszudsyBBjNSBLreEK0BvS5v+s7yFyLrXOz19f1rYDBbuw3mwOYaozOAQajO8cmNm2OCO99y1/QmLfr6LUMJYmO2FYsPoNwXe4sxw8qKzoDqvEStpt31pVWRTZ22O+2D/fsAwODMEfvk4fKPga07RGMAg0CbplBfyRnT+YbbHgOD9fevmAJdd4imF6hWJADWpnNDZNMn2Bgz6HrE/rqDb+vQ72gioFozc8WS+2ILK9zV/ed+BIQvpDKvQODtraMXZcad4a6xwOBzeEETvpDipJ+nRNdAtBe+iSHcFGAQqGny6wsTDFyyHY/AkEnaNRBuBPjFDwTnE5lx34LhgYtfWESSi8y47Id/cE9wQRGeAdUKoVYzaJQkAR+yZyjU+w1IeIL8QQ9PbR0rgDDDWgNhzm4OSHgGPM8JAJCSz1HadWBhkMBNU6EZcL73SRbnSAokMf+BaHJyNlk9/78JzYD7uecWABhcYGsBTl7+A2FGQKlpAQBMJ2EZ+zszEkZ4BhB45vZqioBxBLITLxxCrQHP8CwF4gyYEdCm7MAJ1YAxZ1wyoHqjoTBvNTD/AB0uQ10P1DUWAAAAAElFTkSuQmCC" alt="Logo" width="64" height="64" style="display: block;" />
+          </td>
+          <td style="padding: 5px 0;">
+            ${name ? `<strong style="font-size: 12px; color: #1a7f5a;">${name}</strong><br/>` : ""}
+            ${contactInfo}
+          </td>
+        </tr>
+      </table>
+      `;
+    }
+
+    function updatePreview() {
+      preview.innerHTML = generateSignature();
+    }
+
+    inputs.forEach(input => input.addEventListener("input", updatePreview));
+    updatePreview();
+
+    document.getElementById("copyBtn").addEventListener("click", async () => {
+      const htmlContent = generateSignature();
+
+      try {
+        const blobHTML = new Blob([htmlContent], { type: "text/html" });
+        const blobText = new Blob([htmlContent], { type: "text/plain" });
+        const item = new ClipboardItem({ "text/html": blobHTML, "text/plain": blobText });
+
+        await navigator.clipboard.write([item]);
+
+        toast.className = "show";
+        setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 2500);
+
+      } catch (err) {
+        console.error("Błąd kopiowania:", err);
+        alert("❌ Ups, nie udało się skopiować.");
+      }
+    });
+  </script>
+
+</body>
+</html>
