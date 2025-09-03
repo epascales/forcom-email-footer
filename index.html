@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Generator stopki e-mail</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.prod.website-files.com/67339927e0b13b80c20c4174/6821f93c0c266d6f604ff05a_Favicon.png" rel="shortcut icon" type="image/x-icon">
   <style>
     body {
       font-family: 'Roboto', Arial, sans-serif;
@@ -127,6 +128,10 @@
 
   <div class="card">
     <div class="form-group">
+      <label>Zwrot grzecznościowy</label>
+      <input type="text" id="signoff" value="Pozdrawiam / Best Regards">
+    </div>
+    <div class="form-group">
       <label>Imię i nazwisko</label>
       <input type="text" id="name" value="Jan Kowalski">
     </div>
@@ -150,17 +155,13 @@
       </datalist>
     </div>
     <div class="form-group">
-      <label>Email</label>
+      <label>Email (opcjonalnie)</label>
       <input type="email" id="email" value="">
     </div>
     <div class="form-group">
-      <label>Telefon</label>
+      <label>Telefon (opcjonalnie)</label>
       <input type="text" id="phone" value="" placeholder="Poprawny format: +48 ### ### ###">
-    </div>
-    <div class="form-group">
-      <label>Strona WWW</label>
-      <input readonly type="text" id="website" value="www.forcom.eu">
-    </div>
+    </div>   
     <button id="copyBtn">📋 Kopiuj do schowka</button>
   </div>
 
@@ -175,25 +176,29 @@
     const toast = document.getElementById("toast");
 
     function generateSignature() {
+      const signoff = document.getElementById("signoff").value.trim();
       const name = document.getElementById("name").value.trim();
       const position = document.getElementById("position").value.trim();
       const department = document.getElementById("department").value.trim();
       const email = document.getElementById("email").value.trim();
       const phone = document.getElementById("phone").value.trim();
-      const website = document.getElementById("website").value.trim();
+      const website = "www.forcom.eu";
+
+      // Połączenie email i telefonu w jednej linii
+      let contactLine = "";
+      if(email && phone) contactLine = `<a href="mailto:${email}" style="color: #1a7f5a; text-decoration: none;">${email}</a> | <a href="tel:${phone.replace(/ /g,'')}" style="color: #1a7f5a; text-decoration: none;">${phone}</a>`;
+      else if(email) contactLine = `<a href="mailto:${email}" style="color: #1a7f5a; text-decoration: none;">${email}</a>`;
+      else if(phone) contactLine = `<a href="tel:${phone.replace(/ /g,'')}" style="color: #1a7f5a; text-decoration: none;">${phone}</a>`;
 
       let contactInfo = "";
-
-      if (position) contactInfo += `<span style="color: #444;">${position}</span><br/>`;
-      if (department) contactInfo += `<span style="color: #444;">${department}</span><br/>`;
-      if (email) contactInfo += `<a href="mailto:${email}" style="color: #1a7f5a; text-decoration: none;">${email}</a><br/>`;
-      if (phone) contactInfo += `<a href="tel:${phone.replace(/ /g,'')}" style="color: #1a7f5a; text-decoration: none;">${phone}</a><br/>`;
-      if (website) contactInfo += `<a href="${website}" target="_blank" style="color: #1a7f5a; text-decoration: none;">${website}</a>`;
+      if(position) contactInfo += `<span style="color: #444;">${position}</span><br/>`;
+      if(department) contactInfo += `<span style="color: #444;">${department}</span><br/>`;
+      if(contactLine) contactInfo += `${contactLine}<br/>`;
+      if(website) contactInfo += `<a href="https://${website}" target="_blank" style="color: #1a7f5a; text-decoration: none;">${website}</a>`;
 
       return `
-      <span style="font-size:12px">Pozdrawiam / Best Regards</span>
-<br>
-<br>
+      <span style="font-size:12px">${signoff}</span>
+      <br><br>
       <table style="font-family: Arial, sans-serif; font-size: 12px; color: #000; background-color: #ffffff;">
         <tr>
           <td style="padding-right: 15px;">
@@ -237,5 +242,3 @@
 
 </body>
 </html>
-
-
