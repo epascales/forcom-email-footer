@@ -186,7 +186,7 @@
 
       // Połączenie email i telefonu w jednej linii
       let contactLine = "";
-      if(email && phone) contactLine = `<a href="mailto:${email}" style="color: #1a7f5a; text-decoration: none;">${email}</a> | <a href="tel:${phone.replace(/ /g,'')}" style="color: #1a7f5a; text-decoration: none;">${phone}</a>`;
+      if(email && phone) contactLine = `<a href="mailto:${email}" style="color: #1a7f5a; text-decoration: none;">${email}</a> <span style="color: #1a7f5a;">|</span> <a href="tel:${phone.replace(/ /g,'')}" style="color: #1a7f5a; text-decoration: none;">${phone}</a>`;
       else if(email) contactLine = `<a href="mailto:${email}" style="color: #1a7f5a; text-decoration: none;">${email}</a>`;
       else if(phone) contactLine = `<a href="tel:${phone.replace(/ /g,'')}" style="color: #1a7f5a; text-decoration: none;">${phone}</a>`;
 
