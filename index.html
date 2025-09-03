@@ -4,7 +4,10 @@
   <meta charset="UTF-8">
   <title>Generator stopki e-mail</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://cdn.prod.website-files.com/67339927e0b13b80c20c4174/6821f93c0c266d6f604ff05a_Favicon.png" rel="shortcut icon" type="image/x-icon">
+  <link href="https://cdn.prod.website-files.com/67339927e0b13b80c20c4174/6821f93c0c266d6f604ff05a_Favicon.png" rel="shortcut icon" type="image/x-icon">
+  <!-- Ikony Material Design -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
   <style>
     body {
       font-family: 'Roboto', Arial, sans-serif;
@@ -12,6 +15,7 @@
       padding: 20px;
       background: #f5f5f5;
       color: #333;
+      transition: background 0.3s, color 0.3s;
     }
 
     h2 {
@@ -33,6 +37,7 @@
       max-width: 600px;
       margin: 0 auto 20px auto;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: background 0.3s, color 0.3s;
     }
 
     .form-group {
@@ -52,7 +57,7 @@
       border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 1rem;
-      transition: border 0.2s;
+      transition: border 0.2s, background 0.3s, color 0.3s;
     }
 
     input:focus {
@@ -83,6 +88,7 @@
       border-radius: 12px;
       background: #fff;
       overflow-x: auto;
+      transition: background 0.3s, color 0.3s;
     }
 
     #toast {
@@ -94,7 +100,7 @@
       border-radius: 8px;
       padding: 12px;
       position: fixed;
-      z-index: 1;
+      z-index: 1000;
       left: 50%;
       bottom: 30px;
       transform: translateX(-50%);
@@ -109,6 +115,50 @@
       bottom: 50px;
     }
 
+    /* Dark mode */
+    body.dark {
+      background: #1e1e1e;
+      color: #eee;
+    }
+
+    body.dark .card {
+      background: #2c2c2c;
+      color: #eee;
+    }
+
+    body.dark input {
+      background: #333;
+      color: #eee;
+      border: 1px solid #555;
+    }
+
+    body.dark #preview {
+      background: #2c2c2c;
+      color: #eee;
+      border: 1px solid #555;
+    }
+
+    /* Ikona dark mode */
+    #darkModeBtn {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 28px;
+      color: #1a7f5a;
+      transition: color 0.3s;
+    }
+
+    body.dark #darkModeBtn {
+      color: #f5f5f5;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
     @media (max-width: 600px) {
       .card {
         padding: 15px;
@@ -120,6 +170,9 @@
   </style>
 </head>
 <body>
+
+  <!-- Przycisk dark mode -->
+  <button id="darkModeBtn" class="material-symbols-outlined" title="Tryb ciemny / Dark Mode">light_mode</button>
 
   <!-- Logo nagłówka -->
   <img src="https://cdn.prod.website-files.com/67339927e0b13b80c20c4174/6733a3528be02c5fcee3eb42_forcom-logo.svg" alt="Forcom Logo" class="logo">
@@ -174,6 +227,7 @@
     const inputs = document.querySelectorAll("input");
     const preview = document.getElementById("preview");
     const toast = document.getElementById("toast");
+    const darkModeBtn = document.getElementById("darkModeBtn");
 
     function generateSignature() {
       const signoff = document.getElementById("signoff").value.trim();
@@ -204,7 +258,7 @@
           <td style="padding-right: 15px;">
             <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAFVUlEQVR4nO2ay28bVRTGv3PvnbFdpylu2kRxqRclDRB3RXcFEZBoqbq3JVSlapMgSKVs+AdsLxGopE1kEOpfYEusEJuuskbdViqiO6Rm0VdoGj/m3ntYjBMV1IVjzyvCP8tjaWTPfPfzOefOfRCCgEEgcKG+ktO684iUzEFb/2zCEXELiJuRAXELiJuRAXELiJuRAXELiJuRAXELiJuRAXELiJuRAXELiJuRAXELiJv/vQEKHMikBYEBe7dL0GAwGOgdE47ypQ8NA0D27nHvJZ44UIKAwzAfBKhCfSU37EWs0yXhudz2/j4G0FM2RsNYBpJvgdK682joq2iwVR7Bs9uO43zKLLZtxjclAI2hokjJoSMADEAKsDYq7Yw/fbj83cvhpUWDgrZB1QACyHvFz5xeYaXe+XioVgjFB4STc3T+j8cEAPdzzy1KTft63VOBlCq/+QTAD3vq9QDBFNgD6GBCs+x37bWa2Tt9/z9fm2tU3K3Hf6bHnHGpotQXEoRGyW80kQHgN5yZTv/81RmjMUdsigDNglFg5sntrb/GM5TKaNNRh9cABqE6L1Hb1Cg3DQBM1b+eVFZ/TIIucX35gmU6K1LKJakABthakGXAMsB+cB4+A/YaTpsa2NSolNz8dO5zsnwVrD8TKWcCggDPgLUBtzzDxAxQbwWLaf86oENmQKMkQU0DbOr8+sIEZOY6gZeEFO9DEWzHg211DYgZgACIQJD7jyO0f9j/OBwGVCp+jpdr5vjtq+MZJ3sT4FWRUnn2NGyrawHyG/16g/sg+QY0ShJlv6Kf2vhyARJVkVJnuO3B7rY1AAGigQd1STbAr+7lpjm1dv0suc4aueoKewZ2p60BSBANrT+Zw2E/5BnlpslvLC7CdX8nV12xu13DWlsQKRAFMs5IXgT0Qn5m9XKq9d7bGyLtLnO7C7urDYgOlN/9kCwDGiWJctOcuHV1upXONkTa+ci+amswS7/xwZMcAyrzCuWmzv+w+C6l5a/CkTN2p+WByEEw0f5GkmGA/8/rqVvXipRS90jStN3taBA5Yd86fgN6YZ//fmGW0ul7JGmaW56BGL7C90O8vUClIlBumsm1pSk6kvmNlJjmtmcgwsn3NxGfAQxC8QHNNUquo/CLcOU73O7qKBsPxGlAtSJRbpoXj4/WRTZ9we52vCAebA5KPDXA7+t1/s7idZlNL9mdViQF701EHwF+3ttC/cYZUnLddroWjP7DnoN9RR8BxQcEwBpNP4kjaszudsyBBjNSBLreEK0BvS5v+s7yFyLrXOz19f1rYDBbuw3mwOYaozOAQajO8cmNm2OCO99y1/QmLfr6LUMJYmO2FYsPoNwXe4sxw8qKzoDqvEStpt31pVWRTZ22O+2D/fsAwODMEfvk4fKPga07RGMAg0CbplBfyRnT+YbbHgOD9fevmAJdd4imF6hWJADWpnNDZNMn2Bgz6HrE/rqDb+vQ72gioFozc8WS+2ILK9zV/ed+BIQvpDKvQODtraMXZcad4a6xwOBzeEETvpDipJ+nRNdAtBe+iSHcFGAQqGny6wsTDFyyHY/AkEnaNRBuBPjFDwTnE5lx34LhgYtfWESSi8y47Id/cE9wQRGeAdUKoVYzaJQkAR+yZyjU+w1IeIL8QQ9PbR0rgDDDWgNhzm4OSHgGPM8JAJCSz1HadWBhkMBNU6EZcL73SRbnSAokMf+BaHJyNlk9/78JzYD7uecWABhcYGsBTl7+A2FGQKlpAQBMJ2EZ+zszEkZ4BhB45vZqioBxBLITLxxCrQHP8CwF4gyYEdCm7MAJ1YAxZ1wyoHqjoTBvNTD/AB0uQ10P1DUWAAAAAElFTkSuQmCC" alt="Logo" width="64" height="64" style="display: block;" />
           </td>
-          <td style="padding: 5px 0;">
+          <td style="padding: 5px 0;padding-right:5px;">
             ${name ? `<strong style="font-size: 12px; color: #1a7f5a;">${name}</strong><br/>` : ""}
             ${contactInfo}
           </td>
@@ -237,6 +291,14 @@
         console.error("Błąd kopiowania:", err);
         alert("❌ Ups, nie udało się skopiować.");
       }
+    });
+
+    // Obsługa dark mode
+    let darkMode = false;
+    darkModeBtn.addEventListener("click", () => {
+      darkMode = !darkMode;
+      document.body.classList.toggle("dark", darkMode);
+      darkModeBtn.textContent = darkMode ? "dark_mode" : "light_mode";
     });
   </script>
 
