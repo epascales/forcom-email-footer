@@ -173,6 +173,11 @@
       }
     }
   </style>
+  <script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/forcom-email-footer/sw.js");
+  }
+</script>
 </head>
 <body>
 
@@ -310,5 +315,6 @@
 
 </body>
 </html>
+
 
 
